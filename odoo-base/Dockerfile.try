@@ -1,0 +1,30 @@
+FROM python:3.9-slim-bullseye
+
+LABEL author="Aymen Jemi (Aisysnext Ltd)"
+
+# install libs
+RUN apt update && apt -y install gcc libsasl2-dev libldap2-dev libssl-dev
+RUN apt install -y wget curl gnupg wkhtmltopdf 
+RUN apt install -y npm node-less
+
+# install nodejs libs
+RUN npm install -g rtlcss less less-plugin-clean-css
+
+# install python libs
+RUN pip3 install psycopg2-binary 
+RUN pip3 install prestapyt 
+RUN pip3 install phonenumbers 
+RUN pip3 install pdfminer 
+RUN pip3 install watchdog 
+RUN pip3 install slugify
+RUN pip3 install pyOpenSSL 
+RUN pip3 install pyldap 
+
+
+# remove apt cache
+RUN apt clean
+
+# Expose Odoo services
+EXPOSE 8069 8072
+
+CMD ["bash"]

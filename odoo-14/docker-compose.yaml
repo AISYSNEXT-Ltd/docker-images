@@ -1,0 +1,45 @@
+version: '2'
+networks:
+  mynet:
+    ipam:
+      config:
+        - subnet : 172.20.2.0/24
+services:
+  postgresql:
+    image: arm64v8/postgres:14
+    restart: always
+    volumes:
+      - '/Users/jemix/Documents/projects/odoo14/db:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+
+    hostname: postgresql_host
+    networks:
+      mynet:
+        ipv4_address: 172.20.2.2
+ 
+  odoo:
+    image: jemiaymen/odoo:14
+    ports:
+      - '8081:8069'
+    volumes:
+      - '/Users/jemix/Documents/projects/odoo14/addons:/mnt/extra-addons'
+    depends_on:
+      - postgresql
+    environment:
+      - HOST=postgresql
+      - USER=odoo
+      - PASSWORD=odoo
+
+    hostname: odoo_host
+    networks:
+      mynet:
+        ipv4_address: 172.20.2.3
+
+volumes:
+  odoo:
+    driver: local
+
+  postgresql: 
+    driver: local

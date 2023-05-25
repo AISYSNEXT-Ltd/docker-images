@@ -1,0 +1,50 @@
+version: '2'
+networks:
+  mynet:
+    ipam:
+      config:
+        - subnet : 172.20.0.0/24
+services:
+  mariadb:
+    image: arm64v8/mariadb:10.10
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    environment:
+      - MARIADB_USER=prestashop
+      - MARIADB_DATABASE=prestashop
+      - MARIADB_ROOT_PASSWORD=admin
+      - MARIADB_PASSWORD=admin
+    volumes:
+      - 'mariadb_data:/var/lib/mysql'
+    hostname: mariadb_host
+    networks:
+      mynet:
+        ipv4_address: 172.20.0.5
+
+  prestashop:
+    image: aangiel/prestashop:1.7.8.0-arm64
+    ports:
+      - "8080:80"
+    environment:
+
+      - PRESTASHOP_HOST=localhost
+      - PRESTASHOP_DATABASE_HOST=mariadb
+      - PRESTASHOP_DATABASE_PORT_NUMBER=3306
+      - PRESTASHOP_DATABASE_USER=prestashop
+      - PRESTASHOP_DATABASE_NAME=prestashop
+      - PRESTASHOP_DATABASE_PASSWORD=admin
+    volumes:
+      - 'prestashop_data:/aisysnext/prestashop'
+    hostname: prestashop_host
+    networks:
+      mynet:
+        ipv4_address: 172.20.0.6
+
+volumes:
+  mariadb_data:
+    driver: local
+  prestashop_data:
+    driver: local
+
