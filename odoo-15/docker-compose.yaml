@@ -24,7 +24,7 @@ services:
     ports:
       - '8081:8069'
     volumes:
-      - '/Users/jemix/Documents/projects/aisysnext_odoo_prestashop/dev/addons:/mnt/extra-addons'
+      - '/Users/jemix/Documents/projects:/mnt/extra-addons'
       - '/Users/jemix/Documents/projects/aisysnext_odoo_prestashop/data/odoo:/var/lib/odoo'
     depends_on:
       - postgresql
